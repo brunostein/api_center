@@ -1,0 +1,32 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.header {
+  background-color: #333;
+}
+.app-navbar a.nav-link, .navbar-brand {
+  color: #fff
+}
+.app-navbar a:hover {
+  color: #ccc
+}
+
+.api-connected { background-color: #ccc;}
+
+.page-title { background-color: #fff; }
+
+.alert-heading { font-size: 1.2rem }
