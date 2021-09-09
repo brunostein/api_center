@@ -10,12 +10,10 @@ import { Table, Button, Modal, Form, Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faPlus, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux'
-import moment from 'moment'
-import jwt_decode from "jwt-decode"
 import { 
   getAccounts, createAccount, 
   removeAccount, blockAccount, 
-  unblockAccount, revokeRefreshToken 
+  unblockAccount 
 } from '../services/api-accounts'
 import Layout from '../components/Layout'
 import AlertMessage from '../components/AlertMessage'
@@ -27,7 +25,6 @@ const Accounts = (props) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [modalMessage, setModalMessage] = useState("");
-  const [modalRefreshTokenInfoMessage, setModalRefreshTokenInfoMessage] = useState("");
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -43,30 +40,6 @@ const Accounts = (props) => {
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [confirmModalTitle, setConfirmModalTitle] = useState("");
   const [confirmModalBody, setConfirmModalBody] = useState("");
-  
-  const [refreshTokenInfoModalShow, setRefreshTokenInfoModalShow] = useState(false);
-  
-  const [tokenInfo, setTokenInfo] = useState(null);
-  
-  const refreshTokenInfo = (username, refreshToken) => {
-    let info = {
-      username,
-      refreshToken,
-      data: null
-    }
-
-    let refreshTokenDecoded = jwt_decode(refreshToken);
-    let refreshTokenDecodedHeader = jwt_decode(refreshToken, { header: true })
-
-    let refreshTokenExp = moment.unix(refreshTokenDecoded.exp).format('DD/MM/YYYY HH:mm:ss');
-    let refreshTokenIat = moment.unix(refreshTokenDecoded.iat).format('DD/MM/YYYY HH:mm:ss');
-    refreshTokenDecoded.exp = refreshTokenExp;
-    refreshTokenDecoded.iat = refreshTokenIat;
-    
-    info.data = {...refreshTokenDecoded, header: refreshTokenDecodedHeader };
-
-    setTokenInfo(info);
-  };
   
   const getAccountsList = useCallback(() => {
     getAccounts().then((result) => {
@@ -177,25 +150,6 @@ const Accounts = (props) => {
     setConfirmModalShow(false);
     getAccountsList();
   }
-
-  const showModalRefreshTokenInfo = (username, refreshToken) => {
-    refreshTokenInfo(username, refreshToken);
-    setRefreshTokenInfoModalShow(true);
-  }
-  
-  const requestRevokeRefreshToken = async () => {
-    let res = await revokeRefreshToken(tokenInfo.username, tokenInfo.refreshToken);
-    if (res !== undefined) {
-      let messageType = "danger";
-      if (res.success === false) {
-        messageType = "warning";
-      } else if (res.success === true) {
-        messageType = "success";
-      }
-      setRefreshTokenInfoModalShow(false);
-      setModalRefreshTokenInfoMessage(<AlertMessage type={messageType} message={res.msg || "Error to revoke Refresh Token."} title="Revoke Refresh Token" />);
-    }
-  }
   
   useEffect(() => {
     getAccountsList();
@@ -217,7 +171,6 @@ const Accounts = (props) => {
             <th width="250">#</th>
             <th>Username</th>
             <th>Scope</th>
-            <th className="text-center">Refresh Token</th>
             <th className="text-center">Blocked?</th>
             <th></th>
           </tr>
@@ -229,11 +182,6 @@ const Accounts = (props) => {
                 <td>{data._id}</td>
                 <td>{data.username} </td>
                 <td>{data.scope}</td>
-                <td className="text-center">
-                  {data.refresh_token !== null &&
-                  <Button variant="danger" onClick={() => showModalRefreshTokenInfo(data.username, data.refresh_token)} title="Show Refresh Token Info">show info</Button>
-                  }
-                </td>
                 <td className="text-center">
                   {data.blocked === false
                   ? <FontAwesomeIcon icon={faLockOpen} size="2x" className="text-success" />
@@ -315,46 +263,7 @@ const Accounts = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
-      
-      <Modal show={refreshTokenInfoModalShow} onHide={() => setRefreshTokenInfoModalShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Refresh Token Info</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {modalRefreshTokenInfoMessage}
-          <p>{tokenInfo !== null ? tokenInfo.username : ""}</p>
-          <Table striped bordered hover>
-          <tbody>
-          {tokenInfo !== null &&
-            <>
-            <tr>
-              <td>Type</td>
-              <td>{tokenInfo.data.header.typ}</td>
-            </tr>
-            <tr>
-              <td>Algorithm</td>
-              <td>{tokenInfo.data.header.alg}</td>
-            </tr>
-            <tr>
-              <td>Created at</td>
-              <td>{tokenInfo.data.iat}</td>
-            </tr>
-            <tr>
-              <td>Expiration Date</td>
-              <td>{tokenInfo.data.exp}</td>
-            </tr>
-            </>
-          }
-          </tbody>
-          </Table>
-          <Button className="mt-3" variant="danger" onClick={() => requestRevokeRefreshToken(tokenInfo)} title="Revoke"><FontAwesomeIcon icon={faLock} /> Revoke</Button>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setRefreshTokenInfoModalShow(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
     </Layout>
   )
 }

@@ -119,6 +119,10 @@ const Home = (props) => {
                       <td width="200">Refresh Token Expiration</td>
                       <td>{apiInfo.settings.refreshTokenExpiresIn}</td>
                     </tr>
+                    <tr>
+                      <td width="200">Store Accesses History</td>
+                      <td>{apiInfo.settings.storeAccessesHistoryEnabled}</td>
+                    </tr>
                     </>
                   }
                   </tbody>

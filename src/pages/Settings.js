@@ -28,6 +28,7 @@ const Settings = (props) => {
   const [refreshTokenEnabled, setRefreshTokenEnabled] = useState("");
   const [refreshTokenSecret, setRefreshTokenSecret] = useState("");
   const [refreshTokenExpiration, setRefreshTokenExpiration] = useState("");
+  const [storeAccessesHistoryEnabled, setStoreAccessesHistoryEnabled] = useState("off");
 
   const saveSettings = async () => {
 
@@ -41,7 +42,8 @@ const Settings = (props) => {
       accessTokenExpiresIn: accessTokenExpiration,
       refreshTokenEnabled: refreshTokenEnabled,
       refreshTokenSecret: refreshTokenSecret,
-      refreshTokenExpiresIn: refreshTokenExpiration
+      refreshTokenExpiresIn: refreshTokenExpiration,
+      storeAccessesHistoryEnabled: storeAccessesHistoryEnabled
     }
 
     let result = await updateSettings(data);
@@ -74,6 +76,7 @@ const Settings = (props) => {
         setRefreshTokenEnabled(result.data.refreshTokenEnabled || "off");
         setRefreshTokenSecret(result.data.refreshTokenSecret);
         setRefreshTokenExpiration(result.data.refreshTokenExpiresIn);
+        setStoreAccessesHistoryEnabled(result.data.storeAccessesHistoryEnabled || "off");
         
         setNewApiSettingsData(result.data);
       }
@@ -97,6 +100,17 @@ const Settings = (props) => {
             <Form.Control type="text" placeholder="Description" value={apiDescr} onChange={(e) => setApiDescr(e.target.value)} />
           </Form.Group>
         </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="input-store-accesses-history-enabled" xs={12} md={6}>
+            <Form.Label>Store Accesses History</Form.Label>
+            <Form.Control as="select" custom onChange={(e) => setStoreAccessesHistoryEnabled(e.target.value)} defaultValue={storeAccessesHistoryEnabled}>
+              <option value="on">Yes</option>
+              <option value="off">No</option>
+            </Form.Control>
+          </Form.Group>
+        </Form.Row>
+
+        <hr className="my-4" />
 
         <Form.Row>
           <Form.Group as={Col} controlId="input-token-auth-scheme" xs={12} md={6}>
@@ -109,8 +123,8 @@ const Settings = (props) => {
           <Form.Group as={Col} controlId="input-refresh-token-enabled" xs={12} md={6}>
             <Form.Label>RefreshToken Enabled</Form.Label>
             <Form.Control as="select" custom onChange={(e) => setRefreshTokenEnabled(e.target.value)} defaultValue={refreshTokenEnabled}>
-              <option value="on">On</option>
-              <option value="off">Off</option>
+              <option value="on">Yes</option>
+              <option value="off">No</option>
             </Form.Control>
           </Form.Group>
         </Form.Row>
