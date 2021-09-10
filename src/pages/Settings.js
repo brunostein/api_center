@@ -77,7 +77,7 @@ const Settings = (props) => {
         setRefreshTokenSecret(result.data.refreshTokenSecret);
         setRefreshTokenExpiration(result.data.refreshTokenExpiresIn);
         setStoreAccessesHistoryEnabled(result.data.storeAccessesHistoryEnabled || "off");
-        
+
         setNewApiSettingsData(result.data);
       }
     });
@@ -103,7 +103,7 @@ const Settings = (props) => {
         <Form.Row>
           <Form.Group as={Col} controlId="input-store-accesses-history-enabled" xs={12} md={6}>
             <Form.Label>Store Accesses History</Form.Label>
-            <Form.Control as="select" custom onChange={(e) => setStoreAccessesHistoryEnabled(e.target.value)} defaultValue={storeAccessesHistoryEnabled}>
+            <Form.Control as="select" custom onChange={(e) => setStoreAccessesHistoryEnabled(e.target.value)} value={storeAccessesHistoryEnabled}>
               <option value="on">Yes</option>
               <option value="off">No</option>
             </Form.Control>
@@ -115,14 +115,14 @@ const Settings = (props) => {
         <Form.Row>
           <Form.Group as={Col} controlId="input-token-auth-scheme" xs={12} md={6}>
             <Form.Label>Token Auth Scheme</Form.Label>
-            <Form.Control as="select" custom onChange={(e) => setTokenAuthScheme(e.target.value)} defaultValue="jwt">
+            <Form.Control as="select" custom onChange={(e) => setTokenAuthScheme(e.target.value)} value="jwt">
               <option value="jwt">JWT</option>
               <option value="bearer">Bearer</option>
             </Form.Control>
           </Form.Group>
           <Form.Group as={Col} controlId="input-refresh-token-enabled" xs={12} md={6}>
             <Form.Label>RefreshToken Enabled</Form.Label>
-            <Form.Control as="select" custom onChange={(e) => setRefreshTokenEnabled(e.target.value)} defaultValue={refreshTokenEnabled}>
+            <Form.Control as="select" custom onChange={(e) => setRefreshTokenEnabled(e.target.value)} value={refreshTokenEnabled}>
               <option value="on">Yes</option>
               <option value="off">No</option>
             </Form.Control>
