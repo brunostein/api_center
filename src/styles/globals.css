@@ -16,11 +16,13 @@ a {
 }
 
 .header {
-  background-color: #333;
+  background-color: #13376f;
 }
+
 .app-navbar a.nav-link, .navbar-brand {
   color: #fff
 }
+
 .app-navbar a:hover {
   color: #ccc
 }

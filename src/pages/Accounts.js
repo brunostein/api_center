@@ -29,7 +29,6 @@ const Accounts = (props) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [scope, setScope] = useState("");
 
   const [accountId, setAccountId] = useState(false);
   const [accountsList, setAccountsList] = useState([]);
@@ -59,7 +58,7 @@ const Accounts = (props) => {
     setLoading(true);
     
     if (email === "" || username === "" || 
-      password === "" || scope === "") {
+      password === "") {
       setModalMessage(<AlertMessage type="warning" message="All the fields are required!" title="Form validation error" />);
       setLoading(false);
       return;
@@ -69,7 +68,7 @@ const Accounts = (props) => {
       email: email,
       username: username,
       password: password,
-      scope: scope
+      scope: "user"
     }
     
     let res = await createAccount(data);
@@ -228,12 +227,6 @@ const Accounts = (props) => {
               </Form.Group>
             </Form.Row>
 
-            <Form.Row>
-              <Form.Group as={Col} controlId="input-scope">
-                <Form.Label>Scope</Form.Label>
-                <Form.Control type="text" placeholder="Scope" onChange={(e) => setScope(e.target.value)} />
-              </Form.Group>
-            </Form.Row>
           </Form>
         </Modal.Body>
         <Modal.Footer>

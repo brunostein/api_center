@@ -109,7 +109,7 @@ const Home = (props) => {
                     </tr>
                     <tr>
                       <td width="200">Refresh Token Enabled</td>
-                      <td>{apiInfo.settings.refreshTokenEnabled}</td>
+                      <td>{(apiInfo.settings.refreshTokenEnabled === "on" ? "Yes" : "No")}</td>
                     </tr>
                     <tr>
                       <td width="200">Refresh Token Secret</td>
@@ -121,7 +121,7 @@ const Home = (props) => {
                     </tr>
                     <tr>
                       <td width="200">Store Accesses History</td>
-                      <td>{apiInfo.settings.storeAccessesHistoryEnabled}</td>
+                      <td>{(apiInfo.settings.storeAccessesHistoryEnabled === "on" ? "Yes" : "No")}</td>
                     </tr>
                     </>
                   }
