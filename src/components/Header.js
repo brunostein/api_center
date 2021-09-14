@@ -30,6 +30,7 @@ const Header = (props) => {
           <Nav.Link as={Link} to="/home">Home</Nav.Link>
           <Nav.Link as={Link} to="/accounts">Accounts</Nav.Link>
           <Nav.Link as={Link} to="/settings">Settings</Nav.Link>
+          <Nav.Link as={Link} to="/logs">Logs</Nav.Link>
         </Nav>
         <Nav>
           <NavDropdown title={apiUsername} id="collasible-nav-dropdown" alignRight>

@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { useHistory } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Container, Row, Col, Form, Modal, Button } from 'react-bootstrap'
@@ -73,6 +73,7 @@ const Layout = (props) => {
 
   return (
     <div className="wrapper pb-3">
+      <HelmetProvider>
       <Helmet>
         <title>{config.app.name}</title>
         <link rel="icon" type="image/png" href="favicon_connected.ico" sizes="16x16" />
@@ -131,6 +132,7 @@ const Layout = (props) => {
 
       <footer className="footer">
       </footer>
+    </HelmetProvider>
     </div>
   )
 }

@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
 import { connect } from 'react-redux'
 import { Row, Col, Form, Button, Card } from 'react-bootstrap'
 import { setConnectedApi } from '../redux/actions/api'
@@ -62,6 +62,7 @@ const Login = (props) => {
   }
 
   return (
+    <HelmetProvider>
     <Row>
       <Helmet>
         <title>{config.app.name}</title>
@@ -113,6 +114,7 @@ const Login = (props) => {
         </Card>
       </Col>
     </Row>
+    </HelmetProvider>
   );
 }
 

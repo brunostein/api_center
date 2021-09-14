@@ -3,6 +3,7 @@ import Welcome from './pages/Welcome'
 import Home from './pages/Home'
 import Accounts from './pages/Accounts'
 import Settings from './pages/Settings'
+import Logs from './pages/Logs'
 import PrivateRoute from './components/PrivateRoute'
 
 function AppRoutes() {
@@ -14,6 +15,7 @@ function AppRoutes() {
         <PrivateRoute exact path="/home" component={Home} />
         <PrivateRoute exact path="/accounts" component={Accounts} />
         <PrivateRoute exact path="/settings" component={Settings} />
+        <PrivateRoute exact path="/logs" component={Logs} />
       </Switch>
     </BrowserRouter>
   );
