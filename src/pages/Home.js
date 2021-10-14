@@ -13,9 +13,16 @@ import { getInfo } from '../services/api-info'
 import LoadingIcon from '../components/LoadingIcon'
 import Layout from '../components/Layout'
 import PageTitle from '../components/PageTitle'
+import AlertMessage from '../components/AlertMessage'
+
+const messages = {
+  needRebootAlertTile: "Need Reboot!",
+  needRebootAlertMessage: "The API Settings have been changed, it is necessary to restart it for the changes to take effect.",
+}
 
 const Home = (props) => {
   
+  const [message, setMessage] = useState("");
   const [apiInfo, setApiInfo] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,6 +32,10 @@ const Home = (props) => {
       if (result !== undefined && result.success === true) {
         setApiInfo(result.data);
         props.setApiInfo(result.data);
+
+        if (result.data.settings.needReboot === true) {
+          setMessage(<AlertMessage type="warning" message={messages.needRebootAlertMessage} title={messages.needRebootAlertTile} dismissible={false} />);
+        }
       }
       setLoading(false);
     });
@@ -39,6 +50,7 @@ const Home = (props) => {
       <Row>
         <Col>
           <PageTitle title="Informações da API" />
+          {message}
         </Col>
       </Row>
       
@@ -87,42 +99,66 @@ const Home = (props) => {
                   <tbody>
                   {apiInfo !== null &&
                     <>
-                    <tr>
-                      <td width="200">Name</td>
-                      <td>{apiInfo.settings.name}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Description</td>
-                      <td>{apiInfo.settings.descr}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Token Auth Scheme</td>
-                      <td>{apiInfo.settings.tokenAuthScheme}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Access Token Secret</td>
-                      <td>{apiInfo.settings.accessTokenSecret}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Access Token Expiration</td>
-                      <td>{apiInfo.settings.accessTokenExpiresIn}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Refresh Token Enabled</td>
-                      <td>{(apiInfo.settings.refreshTokenEnabled === "on" ? "Yes" : "No")}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Refresh Token Secret</td>
-                      <td>{apiInfo.settings.refreshTokenSecret}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Refresh Token Expiration</td>
-                      <td>{apiInfo.settings.refreshTokenExpiresIn}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Store Accesses History</td>
-                      <td>{(apiInfo.settings.storeAccessesHistoryEnabled === "on" ? "Yes" : "No")}</td>
-                    </tr>
+                      <tr>
+                        <td width="200">Company Name</td>
+                        <td>{apiInfo.settings.companyName}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Company Website</td>
+                        <td>{apiInfo.settings.companyWebsite}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Company Support Email</td>
+                        <td>{apiInfo.settings.companySupportEmail}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Name</td>
+                        <td>{apiInfo.settings.name}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Description</td>
+                        <td>{apiInfo.settings.descr}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Token Auth Scheme</td>
+                        <td>{apiInfo.settings.tokenAuthScheme}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Access Token Secret</td>
+                        <td>{apiInfo.settings.accessTokenSecret}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Access Token Expiration</td>
+                        <td>{apiInfo.settings.accessTokenExpiresIn}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Refresh Token Enabled</td>
+                        <td>{(apiInfo.settings.refreshTokenEnabled === "on" ? "Yes" : "No")}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Refresh Token Secret</td>
+                        <td>{apiInfo.settings.refreshTokenSecret}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Refresh Token Expiration</td>
+                        <td>{apiInfo.settings.refreshTokenExpiresIn}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Store Accesses History</td>
+                        <td>{(apiInfo.settings.storeAccessesHistoryEnabled === "on" ? "Yes" : "No")}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Swagger Host</td>
+                        <td>{apiInfo.settings.swaggerHost}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Swagger Port</td>
+                        <td>{apiInfo.settings.swaggerPort}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Swagger Path</td>
+                        <td>{apiInfo.settings.swaggerPath}</td>
+                      </tr>
                     </>
                   }
                   </tbody>

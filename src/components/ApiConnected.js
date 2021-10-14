@@ -21,7 +21,9 @@ const ApiConnected = (props) => {
   },[props.apiInfoSettings]);
 
   return (
-    <span><FontAwesomeIcon icon={faPlug} rotation={90} /> {apiName}</span>
+    <>
+      <FontAwesomeIcon icon={faPlug} rotation={90} /> {apiName}
+    </>
   )
 }
 

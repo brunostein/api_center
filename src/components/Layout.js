@@ -18,6 +18,7 @@ import Header from './Header'
 import ApiConnected from './ApiConnected'
 import LoadingIcon from '../components/LoadingIcon'
 import AlertMessage from '../components/AlertMessage'
+import ActionButtons from '../components/ActionButtons';
 
 const Layout = (props) => {
   
@@ -84,6 +85,10 @@ const Layout = (props) => {
       </header>
 
       <div className="api-connected py-3 mb-3">
+        <Col>
+          <ActionButtons />
+          <hr className="mb-2" />
+        </Col>
         <Col>
           <ApiConnected />
         </Col>

@@ -42,7 +42,12 @@ axiosApiInstance.interceptors.response.use((response) => {
     const originalRequest = error.config;
 
     if (error.response !== undefined && 
-      error.response.status === 401 && _retry < maxRetry) {
+      error.response.status === 401) {
+
+      if (_retry === maxRetry) {
+        dispatchState(setNeedNewAuth(true));
+        return;
+      }
     
       const apiData = getState('api').info;
 
@@ -50,14 +55,16 @@ axiosApiInstance.interceptors.response.use((response) => {
         dispatchState(setNeedNewAuth(true));
       } else {
 
-        _retry++;
+        _retry = _retry+1;
+console.log(_retry);
+
         let res = await refreshToken();
 
         if (res !== undefined && res.success === true && res.data.access_token !== undefined) {      
           dispatchState(setNeedNewAuth(false));
           dispatchState(setLoggedUser(res.data));
-          axios.defaults.headers.common['Authorization'] = 'JWT ' + res.data.access_token;
-          _retry = 0;
+          axios.defaults.headers.common['Authorization'] = `${res.data.token_type} ${res.data.access_token}`;
+//          _retry = 0;
           return axiosApiInstance(originalRequest);
         } else {
           dispatchState(setNeedNewAuth(true));

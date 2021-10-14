@@ -167,7 +167,7 @@ const Accounts = (props) => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th width="250">#</th>
+            <th width="250">Email</th>
             <th>Username</th>
             <th>Scope</th>
             <th className="text-center">Blocked?</th>
@@ -178,7 +178,7 @@ const Accounts = (props) => {
           {accountsList.map((data, index) => {
             return (
               <tr key={index}>
-                <td>{data._id}</td>
+                <td>{data.email}</td>
                 <td>{data.username} </td>
                 <td>{data.scope}</td>
                 <td className="text-center">
@@ -188,12 +188,14 @@ const Accounts = (props) => {
                   }
                 </td>
                 <td className="text-center">
-                  {data.scope !== "system" &&
-                    <Button variant="danger" onClick={() => showModalConfirm(data._id)} titl="Remove Account"><FontAwesomeIcon icon={faTrash} /></Button>
-                  }
-                  {data.blocked === false
-                    ? <Button className="ml-1" variant="danger" onClick={() => requestBlockAccount(data._id)} title="Block"><FontAwesomeIcon icon={faLock} /></Button>
-                    : <Button className="ml-1" variant="success" onClick={() => requestUnblockAccount(data._id)} title="Unblock"><FontAwesomeIcon icon={faLockOpen} /></Button>
+                  {data.system !== true &&
+                    <>
+                      <Button variant="danger" onClick={() => showModalConfirm(data._id)} titl="Remove Account"><FontAwesomeIcon icon={faTrash} /></Button>
+                      {data.blocked === false
+                        ? <Button className="ml-1" variant="danger" onClick={() => requestBlockAccount(data._id)} title="Block"><FontAwesomeIcon icon={faLock} /></Button>
+                        : <Button className="ml-1" variant="success" onClick={() => requestUnblockAccount(data._id)} title="Unblock"><FontAwesomeIcon icon={faLockOpen} /></Button>
+                      }
+                    </>
                   }
                 </td>
               </tr>

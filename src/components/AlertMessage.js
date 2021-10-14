@@ -17,7 +17,7 @@ export default function AlertMessage(props) {
 
   if (show) {
     return (
-      <Alert variant={props.type} onClose={() => setShow(false)} dismissible>
+      <Alert className={props.className} variant={props.type} onClose={() => setShow(false)} dismissible={props.dismissible !== undefined ? props.dismissible : true}>
         {props.title &&
         <>
           <Alert.Heading>{props.title}</Alert.Heading>
