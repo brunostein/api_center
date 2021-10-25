@@ -43,6 +43,7 @@ const Settings = (props) => {
   const [refreshTokenExpiration, setRefreshTokenExpiration] = useState("");
   const [refreshTokenExpirationInterval, setRefreshTokenExpirationInterval] = useState("");
   const [storeAccessesHistoryEnabled, setStoreAccessesHistoryEnabled] = useState("off");
+  const [swaggerProtocol, setSwaggerProtocol] = useState("");
   const [swaggerHost, setSwaggerHost] = useState("");
   const [swaggerPort, setSwaggerPort] = useState("");
   const [swaggerPath, setSwaggerPath] = useState("");
@@ -64,7 +65,7 @@ const Settings = (props) => {
       refreshTokenSecret: refreshTokenSecret,
       refreshTokenExpiresIn: refreshTokenExpiration + refreshTokenExpirationInterval,
       storeAccessesHistoryEnabled: storeAccessesHistoryEnabled,
-      swaggerHost: swaggerHost,
+      swaggerHost: swaggerProtocol + "://" + swaggerHost,
       swaggerPort: swaggerPort,
       swaggerPath: swaggerPath
     }
@@ -114,6 +115,14 @@ const Settings = (props) => {
           _refreshTokenExpirationInterval = result.data.refreshTokenExpiresIn.slice(-1);
         }
 
+        let _swaggerProtocol  = "http";
+        let _swaggerHost = result.data.swaggerHost;
+        if (result.data.swaggerHost && result.data.swaggerHost !== "") {
+          let swaggerHostSplited = result.data.swaggerHost.split("://");
+          _swaggerProtocol = swaggerHostSplited[0];
+          _swaggerHost = swaggerHostSplited[1];
+        }
+
         setNeedReboot(result.data.needReboot);
         setCompanyName(result.data.companyName);
         setCompanyWebsite(result.data.companyWebsite);
@@ -129,7 +138,8 @@ const Settings = (props) => {
         setRefreshTokenExpiration(_refreshTokenExpiration);
         setRefreshTokenExpirationInterval(_refreshTokenExpirationInterval);
         setStoreAccessesHistoryEnabled(result.data.storeAccessesHistoryEnabled || "off");
-        setSwaggerHost(result.data.swaggerHost);
+        setSwaggerProtocol(_swaggerProtocol);
+        setSwaggerHost(_swaggerHost);
         setSwaggerPort(result.data.swaggerPort);
         setSwaggerPath(result.data.swaggerPath);
 
@@ -249,15 +259,22 @@ const Settings = (props) => {
         <hr className="my-4" />
 
         <Form.Row>
+          <Form.Group as={Col} controlId="input-swagger-protocol" xs={12} md={3}>
+            <Form.Label>Swagger Protocol</Form.Label>
+            <Form.Control as="select" custom onChange={(e) => setSwaggerProtocol(e.target.value)} value={swaggerProtocol}>
+              <option value="http">http://</option>
+              <option value="https">https://</option>
+            </Form.Control>
+          </Form.Group>
           <Form.Group as={Col} controlId="input-swagger-host" xs={12} md={4}>
             <Form.Label>Swagger Host</Form.Label>
             <Form.Control type="text" placeholder="Swagger Host" value={swaggerHost} onChange={(e) => setSwaggerHost(e.target.value)} />
           </Form.Group>
-          <Form.Group as={Col} controlId="input-swagger-port" xs={12} md={4}>
+          <Form.Group as={Col} controlId="input-swagger-port" xs={12} md={2}>
             <Form.Label>Swagger Port</Form.Label>
             <Form.Control type="text" placeholder="Swagger Port" value={swaggerPort} onChange={(e) => setSwaggerPort(e.target.value)} />
           </Form.Group>
-          <Form.Group as={Col} controlId="input-swagger-path" xs={12} md={4}>
+          <Form.Group as={Col} controlId="input-swagger-path" xs={12} md={3}>
             <Form.Label>Swagger Path</Form.Label>
             <Form.Control type="text" placeholder="Swagger Path" value={swaggerPath} onChange={(e) => setSwaggerPath(e.target.value)} />
           </Form.Group>
