@@ -35,18 +35,28 @@ const Settings = (props) => {
   const [apiName, setApiName] = useState('');
   const [apiDescr, setApiDescr] = useState('');
   const [tokenAuthScheme, setTokenAuthScheme] = useState('jwt');
-  const [accessTokenSecret, setAccessTokenSecret] = useState("");
-  const [accessTokenExpiration, setAccessTokenExpiration] = useState("");
-  const [accessTokenExpirationInterval, setAccessTokenExpirationInterval] = useState("");
-  const [refreshTokenEnabled, setRefreshTokenEnabled] = useState("");
-  const [refreshTokenSecret, setRefreshTokenSecret] = useState("");
-  const [refreshTokenExpiration, setRefreshTokenExpiration] = useState("");
-  const [refreshTokenExpirationInterval, setRefreshTokenExpirationInterval] = useState("");
-  const [storeAccessesHistoryEnabled, setStoreAccessesHistoryEnabled] = useState("off");
-  const [swaggerProtocol, setSwaggerProtocol] = useState("");
-  const [swaggerHost, setSwaggerHost] = useState("");
-  const [swaggerPort, setSwaggerPort] = useState("");
-  const [swaggerPath, setSwaggerPath] = useState("");
+  const [accessTokenSecret, setAccessTokenSecret] = useState('');
+  const [accessTokenExpiration, setAccessTokenExpiration] = useState('');
+  const [accessTokenExpirationInterval, setAccessTokenExpirationInterval] = useState('');
+  const [refreshTokenEnabled, setRefreshTokenEnabled] = useState('');
+  const [refreshTokenSecret, setRefreshTokenSecret] = useState('');
+  const [refreshTokenExpiration, setRefreshTokenExpiration] = useState('');
+  const [refreshTokenExpirationInterval, setRefreshTokenExpirationInterval] = useState('');
+  const [storeAccessesHistoryEnabled, setStoreAccessesHistoryEnabled] = useState('off');
+  const [swaggerProtocol, setSwaggerProtocol] = useState('http');
+  const [swaggerHost, setSwaggerHost] = useState('localhost');
+  const [swaggerPort, setSwaggerPort] = useState('');
+  const [swaggerPath, setSwaggerPath] = useState('/doc');
+  const [cacheEnabled, setCacheEnabled] = useState(false);
+  const [cachePrefix, setCachePrefix] = useState('');
+  const [cacheType, setCacheType] = useState('');
+  const [cacheRedisHost, setCacheRedisHost] = useState('');
+  const [cacheRedisPort, setCacheRedisPort] = useState('');
+  const [cacheRedisPass, setCacheRedisPass] = useState('');
+  const [cacheRedisDefaultExpirationTime, setCacheRedisDefaultExpirationTime] = useState(300);
+  const [cacheRedisRandomExpiration, setCacheRedisRandomExpiration] = useState(true);
+  const [cacheRedisRandomExpirationMinNumber, setCacheRedisRandomExpirationMinNumber] = useState(60);
+  const [cacheRedisRandomExpirationMaxNumber, setCacheRedisRandomExpirationMaxNumber] = useState(600);
 
   const saveSettings = async () => {
 
@@ -67,8 +77,18 @@ const Settings = (props) => {
       storeAccessesHistoryEnabled: storeAccessesHistoryEnabled,
       swaggerHost: swaggerProtocol + "://" + swaggerHost,
       swaggerPort: swaggerPort,
-      swaggerPath: swaggerPath
-    }
+      swaggerPath: swaggerPath,
+      cacheEnabled: cacheEnabled,
+      cachePrefix: cachePrefix,
+      cacheType: cacheType,
+      cacheRedisHost: cacheRedisHost,
+      cacheRedisPort: cacheRedisPort,
+      cacheRedisPass: cacheRedisPass,
+      cacheRedisDefaultExpirationTime: cacheRedisDefaultExpirationTime,
+      cacheRedisRandomExpiration: cacheRedisRandomExpiration,
+      cacheRedisRandomExpirationMinNumber: cacheRedisRandomExpirationMinNumber,
+      cacheRedisRandomExpirationMaxNumber: cacheRedisRandomExpirationMaxNumber
+    };
 
     let result = await updateSettings(data);
 
@@ -98,52 +118,65 @@ const Settings = (props) => {
     getSettings().then((result) => {
       if (result && result.success === true) {
 
+        let settings = result.data;
+
         let _accessTokenExpiration = null;
-        if (result.data.accessTokenExpiresIn) {
-          _accessTokenExpiration = result.data.accessTokenExpiresIn.slice(0, result.data.accessTokenExpiresIn.length-1);
+        if (settings.accessTokenExpiresIn) {
+          _accessTokenExpiration = settings.accessTokenExpiresIn.slice(0, settings.accessTokenExpiresIn.length-1);
         }
         let _accessTokenExpirationInterval = null;
-        if (result.data.accessTokenExpiresIn) {
-          _accessTokenExpirationInterval = result.data.accessTokenExpiresIn.slice(-1);
+        if (settings.accessTokenExpiresIn) {
+          _accessTokenExpirationInterval = settings.accessTokenExpiresIn.slice(-1);
         }
         let _refreshTokenExpiration = null;
-        if (result.data.refreshTokenExpiresIn) {
-          _refreshTokenExpiration = result.data.refreshTokenExpiresIn.slice(0, result.data.refreshTokenExpiresIn.length-1);
+        if (settings.refreshTokenExpiresIn) {
+          _refreshTokenExpiration = settings.refreshTokenExpiresIn.slice(0, settings.refreshTokenExpiresIn.length-1);
         }
         let _refreshTokenExpirationInterval = null;
-        if (result.data.refreshTokenExpiresIn) {
-          _refreshTokenExpirationInterval = result.data.refreshTokenExpiresIn.slice(-1);
+        if (settings.refreshTokenExpiresIn) {
+          _refreshTokenExpirationInterval = settings.refreshTokenExpiresIn.slice(-1);
         }
 
         let _swaggerProtocol  = "http";
-        let _swaggerHost = result.data.swaggerHost;
-        if (result.data.swaggerHost && result.data.swaggerHost !== "") {
-          let swaggerHostSplited = result.data.swaggerHost.split("://");
+        let _swaggerHost = settings.swaggerHost;
+
+        if (settings.swaggerHost && settings.swaggerHost !== "") {
+          let swaggerHostSplited = settings.swaggerHost.split("://");
           _swaggerProtocol = swaggerHostSplited[0];
           _swaggerHost = swaggerHostSplited[1];
         }
 
-        setNeedReboot(result.data.needReboot);
-        setCompanyName(result.data.companyName);
-        setCompanyWebsite(result.data.companyWebsite);
-        setCompanySupportEmail(result.data.companySupportEmail);
-        setApiName(result.data.name);
-        setApiDescr(result.data.descr);
-        setTokenAuthScheme(result.data.tokenAuthScheme);
-        setAccessTokenSecret(result.data.accessTokenSecret);
+        setNeedReboot(settings.needReboot);
+        setCompanyName(settings.companyName);
+        setCompanyWebsite(settings.companyWebsite);
+        setCompanySupportEmail(settings.companySupportEmail);
+        setApiName(settings.name);
+        setApiDescr(settings.descr);
+        setTokenAuthScheme(settings.tokenAuthScheme);
+        setAccessTokenSecret(settings.accessTokenSecret);
         setAccessTokenExpiration(_accessTokenExpiration);
         setAccessTokenExpirationInterval(_accessTokenExpirationInterval);
-        setRefreshTokenEnabled(result.data.refreshTokenEnabled || "off");
-        setRefreshTokenSecret(result.data.refreshTokenSecret);
+        setRefreshTokenEnabled(settings.refreshTokenEnabled || "off");
+        setRefreshTokenSecret(settings.refreshTokenSecret);
         setRefreshTokenExpiration(_refreshTokenExpiration);
         setRefreshTokenExpirationInterval(_refreshTokenExpirationInterval);
-        setStoreAccessesHistoryEnabled(result.data.storeAccessesHistoryEnabled || "off");
+        setStoreAccessesHistoryEnabled(settings.storeAccessesHistoryEnabled || "off");
         setSwaggerProtocol(_swaggerProtocol);
         setSwaggerHost(_swaggerHost);
-        setSwaggerPort(result.data.swaggerPort);
-        setSwaggerPath(result.data.swaggerPath);
+        setSwaggerPort(settings.swaggerPort);
+        setSwaggerPath(settings.swaggerPath);
+        setCacheEnabled(settings.cache.enabled);
+        setCachePrefix(settings.cache.prefix);
+        setCacheType(settings.cache.type);
+        setCacheRedisHost(settings.cache.redis.host);
+        setCacheRedisPort(settings.cache.redis.port);
+        setCacheRedisPass("");
+        setCacheRedisDefaultExpirationTime(settings.cache.redis.defaultExpirationTime);
+        setCacheRedisRandomExpiration(settings.cache.redis.randomExpiration);
+        setCacheRedisRandomExpirationMinNumber(settings.cache.redis.randomExpirationMinNumber);
+        setCacheRedisRandomExpirationMaxNumber(settings.cache.redis.randomExpirationMaxNumber);
 
-        if (result.data.needReboot === true) {
+        if (settings.needReboot === true) {
           setMessage(<AlertMessage type="warning" message={messages.needRebootAlertMessage} title={messages.needRebootAlertTile} dismissible={false} />);
         }
 
@@ -277,6 +310,65 @@ const Settings = (props) => {
           <Form.Group as={Col} controlId="input-swagger-path" xs={12} md={3}>
             <Form.Label>Swagger Path</Form.Label>
             <Form.Control type="text" placeholder="Swagger Path" value={swaggerPath} onChange={(e) => setSwaggerPath(e.target.value)} />
+          </Form.Group>
+        </Form.Row>
+
+        <hr className="my-4" />
+
+        <Form.Row>
+          <Form.Group as={Col} controlId="input-cache-enable" xs={12} md={4}>
+            <Form.Label>Cache Status</Form.Label>
+            <Form.Control as="select" custom onChange={(e) => setCacheEnabled(e.target.value)} value={cacheEnabled}>
+              <option value="true">Enabled</option>
+              <option value="false">Disabled</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-cache-settings" xs={12} md={4}>
+            <Form.Label>Cache Type</Form.Label>
+            <Form.Control as="select" custom onChange={(e) => setCacheType(e.target.value)} value={cacheType}>
+              <option value="redis">Redis</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-redis-prefix" xs={12} md={4}>
+            <Form.Label>Redis Prefix</Form.Label>
+            <Form.Control type="text" placeholder="Redis Prefix" value={cachePrefix} onChange={(e) => setCachePrefix(e.target.value)} />
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} controlId="input-redis-host" xs={12} md={4}>
+            <Form.Label>Redis Host</Form.Label>
+            <Form.Control type="text" placeholder="Redis Host" value={cacheRedisHost} onChange={(e) => setCacheRedisHost(e.target.value)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-redis-port" xs={12} md={4}>
+            <Form.Label>Redis Port</Form.Label>
+            <Form.Control type="text" placeholder="Redis Port" value={cacheRedisPort} onChange={(e) => setCacheRedisPort(e.target.value)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-redis-pass" xs={12} md={4}>
+            <Form.Label>Redis Password</Form.Label>
+            <Form.Control type="text" placeholder="Redis Password" onChange={(e) => setCacheRedisPass(e.target.value)} />
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} controlId="input-redis-default-expiration-time" xs={12} md={3}>
+            <Form.Label>Redis (Default expiration key time)</Form.Label>
+            <Form.Control type="text" placeholder="Default expiration key time" value={cacheRedisDefaultExpirationTime} onChange={(e) => setCacheRedisDefaultExpirationTime(e.target.value)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-redis-random-expiration" xs={12} md={3}>
+            <Form.Label>Redis Random Expiration Time</Form.Label>
+            <Form.Control as="select" custom onChange={(e) => setCacheRedisRandomExpiration(e.target.value)} value={cacheRedisRandomExpiration}>
+              <option value="true">Enabled</option>
+              <option value="false">Disabled</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-redis-random-expiration-min" xs={6} md={3}>
+            <Form.Label>Redis Random Expiration Time (Min)</Form.Label>
+            <Form.Control type="text" placeholder="Expiration Time (Min)" value={cacheRedisRandomExpirationMinNumber} onChange={(e) => setCacheRedisRandomExpirationMinNumber(e.target.value)} />
+          </Form.Group>
+          <Form.Group as={Col} controlId="input-redis-random-expiration-max" xs={6} md={3}>
+            <Form.Label>Redis Random Expiration Time (Max)</Form.Label>
+            <Form.Control type="text" placeholder="Expiration Time (Min)" value={cacheRedisRandomExpirationMaxNumber} onChange={(e) => setCacheRedisRandomExpirationMaxNumber(e.target.value)} />
           </Form.Group>
         </Form.Row>
 

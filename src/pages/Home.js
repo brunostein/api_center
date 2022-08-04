@@ -59,7 +59,6 @@ const Home = (props) => {
           <Card className="page-title mb-3">
             <Card.Body>
               <h5 className="mb-3">Api Info</h5>
-
               {loading === true
                 ? <LoadingIcon /> 
                 : (
@@ -67,18 +66,22 @@ const Home = (props) => {
                   <tbody>
                   {apiInfo !== null &&
                     <>
-                    <tr>
-                      <td width="200">Version</td>
-                      <td>{apiInfo.api.version}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Listen</td>
-                      <td>{apiInfo.api.host}</td>
-                    </tr>
-                    <tr>
-                      <td width="200">Port</td>
-                      <td>{apiInfo.api.port}</td>
-                    </tr>
+                      <tr>
+                        <td width="200">Uptime (seconds)</td>
+                        <td>{apiInfo.uptime}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Version</td>
+                        <td>{apiInfo.api.version}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Listen</td>
+                        <td>{apiInfo.api.host}</td>
+                      </tr>
+                      <tr>
+                        <td width="200">Port</td>
+                        <td>{apiInfo.api.port}</td>
+                      </tr>
                     </>
                   }
                   </tbody>
